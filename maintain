@@ -45,7 +45,7 @@ function conf() {
 }
 
 function add_deb() {
-  arch="$(dpkg --info $1 | awk '/Architecture/ {printf "%s", $2}')"
+  arch="$(dpkg --info "$1" | awk '/Architecture/ {printf "%s", $2}')"
   if [ "" == "$arch" ]; then
     arch="all"
   fi
@@ -60,9 +60,9 @@ function sign_rpm() {
 }
 
 function add_rpm() {
-  arch="" # TODO
+  arch="$(rpm -qp --queryformat '%{ARCH}\n' "$1" 2>/dev/null)"
   if [ "" == "$arch" ]; then
-    arch="all"
+    arch="noarch"
   fi
   filename="$(basename "$1")"
   echo "Adding rpm $filename"
