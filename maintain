@@ -46,13 +46,14 @@ function conf() {
 
 function add_deb() {
   arch="$(dpkg --info "$1" | awk '/Architecture/ {printf "%s", $2}')"
+  name="$(dpkg --info "$1" | awk '/Package/ {printf "%s", $2}')"
   if [ "" == "$arch" ]; then
     arch="all"
   fi
-  filename="$(basename "$1")"
-  echo "Adding deb $filename"
+  filename="$name.deb"
+  echo "Adding deb $filename $arch"
   mkdir -p "$BASE_DIR/deb/$arch/pool"
-  cp -u "$1" "$BASE_DIR/deb/$arch/pool/$filename"
+  cp -f "$1" "$BASE_DIR/deb/$arch/pool/$filename"
 }
 
 function sign_rpm() {
@@ -61,15 +62,21 @@ function sign_rpm() {
 
 function add_rpm() {
   arch="$(rpm -qp --queryformat '%{ARCH}\n' "$1" 2>/dev/null)"
+  name="$(rpm -qp --queryformat '%{NAME}\n' "$1" 2>/dev/null)"
   if [ "" == "$arch" ]; then
     arch="noarch"
   fi
-  filename="$(basename "$1")"
-  echo "Adding rpm $filename"
+  filename="$name.rpm"
+  echo "Adding rpm $filename $arch"
   mkdir -p "$BASE_DIR/rpm/$arch/packages"
   pkg="$BASE_DIR/rpm/$arch/packages/$filename"
+  # Skip if already added
   if [ -f "$pkg" ]; then
-    return
+    version_a="$(rpm -qp --queryformat '%{VERSION}\n' "$1" 2>/dev/null)"
+    version_b="$(rpm -qp --queryformat '%{VERSION}\n' "$pkg" 2>/dev/null)"
+    if [ "$version_a" == "$version_b" ]; then
+      return
+    fi
   fi
   cp -u "$1" "$pkg"
   echo "  Signing $filename"
