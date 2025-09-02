@@ -1,8 +1,8 @@
 gpg: C5C84658CCFD7E8E71DEE933AF3AE54FC3A35C9F
-url: "https://asciimoth.github.io/testrepo"
+url: "https://asciimoth.github.io/testdebrpm"
 
 deb:
   origin: "asciimoth"
   label: "asciimoth"
-  description: "My personal APT repo"
+  description: "My personal APT and RPM repo"
 

@@ -26,11 +26,109 @@ function check_env() {
 check_env $@
 
 # Read config
-GPG_FPR="$(cat "$BASE_DIR/config.yaml" | yq .gpg)"
-URL="$(cat "$BASE_DIR/config.yaml" | yq .url)"
-DEB_ORIGIN="$(cat "$BASE_DIR/config.yaml" | yq .deb.origin)"
-DEB_LABEL="$(cat "$BASE_DIR/config.yaml" | yq .deb.label)"
-DEB_DESCRIPTION="$(cat "$BASE_DIR/config.yaml" | yq .deb.description)"
+GPG_FPR="$(cat "$BASE_DIR/config.yaml" | yq -r .gpg)"
+URL="$(cat "$BASE_DIR/config.yaml" | yq -r .url)"
+DEB_ORIGIN="$(cat "$BASE_DIR/config.yaml" | yq -r .deb.origin)"
+DEB_LABEL="$(cat "$BASE_DIR/config.yaml" | yq  -r .deb.label)"
+DEB_DESCRIPTION="$(cat "$BASE_DIR/config.yaml" | yq -r .deb.description)"
 
-echo $GPG_FPR $URL $DEB_ORIGIN $DEB_LABEL $DEB_DESCRIPTION
+function help() {
+  echo "TODO: help"
+}
+
+function conf() {
+  echo "gpg:             $GPG_FPR"
+  echo "url:             $URL"
+  echo "deb.origin:      $DEB_ORIGIN"
+  echo "deb.label:       $DEB_LABEL"
+  echo "deb.description: $DEB_DESCRIPTION"
+}
+
+function add_deb() {
+  arch="$(dpkg --info $1 | awk '/Architecture/ {printf "%s", $2}')"
+  if [ "" == "$arch" ]; then
+    arch="all"
+  fi
+  filename="$(basename "$1")"
+  echo "Adding deb $filename"
+  mkdir -p "$BASE_DIR/deb/$arch/pool"
+  cp -u "$1" "$BASE_DIR/deb/$arch/pool/$filename"
+}
+
+function sign_rpm() {
+  rpm --define "_gpg_name $GPG_FPR" --addsign "$1" > /dev/null
+}
+
+function add_rpm() {
+  arch="" # TODO
+  if [ "" == "$arch" ]; then
+    arch="all"
+  fi
+  filename="$(basename "$1")"
+  echo "Adding rpm $filename"
+  mkdir -p "$BASE_DIR/rpm/$arch/packages"
+  pkg="$BASE_DIR/rpm/$arch/packages/$filename"
+  if [ -f "$pkg" ]; then
+    return
+  fi
+  cp -u "$1" "$pkg"
+  echo "  Signing $filename"
+  sign_rpm "$pkg"
+}
+
+function add() {
+  for src in "$@"; do
+    if [ ! -f "$src" ]; then
+      echo "File not found: $src" >&2
+      continue
+    fi
+    filename="$(basename "$src")"
+    case "$filename" in
+      *.deb)
+        add_deb "$src"
+        ;;
+      *.rpm)
+        add_rpm "$src"
+        ;;
+      *)
+        echo "Unknown pkg type: $filename" >&2
+        ;;
+    esac
+  done
+}
+
+function clean() {
+  rm -rf "$BASE_DIR/deb" "$BASE_DIR/rpm"
+}
+
+if [ ! "$#" -gt 0 ]; then
+  help $@
+  exit 1
+fi
+
+case "$1" in
+  "help")
+    shift
+    help $@
+    exit 0
+    ;;
+  "add")
+    shift
+    add $@
+    exit 0
+    ;;
+  "conf")
+    shift
+    conf $@
+    exit 0
+    ;;
+  "clean")
+    shift
+    clean
+    exit 0
+    ;;
+esac
+
+help $@
+exit 1
 
