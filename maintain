@@ -1,0 +1,36 @@
+#!/usr/bin/env sh
+set -euo pipefail
+
+BASE_DIR="$(dirname "$(realpath "$0")")"
+
+function enter_env() {
+  if [ ! -z "${MAINTAIN_RECURSION+x}" ]; then
+    echo "Found recursion; looks like nix env is broken" 1>&2
+    exit 1
+  fi
+  export MAINTAIN_RECURSION="true"
+  nix develop "$BASE_DIR" --command "$BASE_DIR/maintain" $@
+  exit $?
+}
+
+function check_env() {
+  deps=("yq" "gzip" "rpm" "createrepo_c" "apt" "dpkg")
+  for d in ${deps[@]}; do
+    if ! command -v "$d" >/dev/null 2>&1
+    then
+      enter_env $@
+    fi
+  done
+}
+
+check_env $@
+
+# Read config
+GPG_FPR="$(cat "$BASE_DIR/config.yaml" | yq .gpg)"
+URL="$(cat "$BASE_DIR/config.yaml" | yq .url)"
+DEB_ORIGIN="$(cat "$BASE_DIR/config.yaml" | yq .deb.origin)"
+DEB_LABEL="$(cat "$BASE_DIR/config.yaml" | yq .deb.label)"
+DEB_DESCRIPTION="$(cat "$BASE_DIR/config.yaml" | yq .deb.description)"
+
+echo $GPG_FPR $URL $DEB_ORIGIN $DEB_LABEL $DEB_DESCRIPTION
+
