@@ -52,3 +52,21 @@ Homepage: https://example.com/
 Description: Usefull tool
 License: Apache OR MIT
 
+Package: gotestprjtmpl
+Version: 0.9.2
+Architecture: i386
+Maintainer: John Doe <jdoe@example.com>
+Installed-Size: 1340
+Depends: bash
+Recommends: git
+Filename: pool/gotestprjtmpl-i386.deb
+Size: 628402
+MD5sum: 19afe7d43c8a2ebcd0a92a67314ca425
+SHA1: 4241a220b4eea44914779dee72e3d1e8cd1c4e15
+SHA256: 225d8994da8085770d7a9b75c778363f2c6892d464dd8eef3ade8db6eca34da3
+Section: default
+Priority: optional
+Homepage: https://example.com/
+Description: Usefull tool
+License: Apache OR MIT
+
