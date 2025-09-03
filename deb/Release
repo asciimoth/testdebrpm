@@ -1,0 +1,20 @@
+Architectures: all
+Codename: stable
+Components: main
+Date: Wed, 03 Sep 2025 15:25:55 +0000
+Description: My personal APT and RPM repo
+Label: asciimoth
+Origin: asciimoth
+Suite: stable
+MD5Sum:
+ b2c6a3c2e5896e76835166dd42e08b60             1437 Packages
+ cde09b48bfb001eb80c16f70dc8f8c5b              182 Release
+SHA1:
+ 30c2565014cad1bf598032aaf72d00aa9352350d             1437 Packages
+ 0474925273237941e1a72a6d2a9e9cbf77f04f05              182 Release
+SHA256:
+ 99b631d8f8f86536f47154bfc84dbe16c05f3481ec203110377e05656186eed5             1437 Packages
+ 70a107331c9f2eede7aeb47269c4b3b78dd43bd38a2a4ff3885d43282ddeaebb              182 Release
+SHA512:
+ d247eff05d7e6f862f0fb20a2abc828cdb067122376ba428d6632abfdef4f42477521ae6499a07d2104638e5f9f658f8c50370d1f66f1ecd5c42c93db23aae36             1437 Packages
+ 28415364762ce1556c1912a5942570c2a030890807c6fa2a2e960e9f42936a660c5a3772114fd0d9f3f3f4b40b751fb7f77c680e3ad81ffb78b1a02f62bf8471              182 Release
