@@ -144,7 +144,7 @@ function commit() {
   else
     message="$1: $2"
   fi
-  git commit -m "$message"
+  echo git commit -m "\"$message\""
 }
 
 function rebuild_md() {
