@@ -1,0 +1,26 @@
+- [..]({{(ds "config").url}})
+{{- if (file.Exists "./Packages") }}
+- [Packages]({{(ds "config").url}}/deb/Packages) - packages index
+{{- end -}}
+
+{{- if (file.Exists "./pool") -}}
+{{- range file.Walk "./pool" -}}
+{{- if ne (filepath.Base .) "pool"}}
+- [{{ filepath.Base . }}]({{(ds "config").url}}/deb/{{.}})
+{{- end -}}
+{{- end -}}
+{{- end -}}
+
+
+{{- if (file.Exists "./repomd.xml") }}
+- [Packages]({{(ds "config").url}}/rpm/repomd.xml) - packages index
+{{- end -}}
+
+{{- if (file.Exists "./packages") -}}
+{{- range file.Walk "./packages" -}}
+{{- if ne (filepath.Base .) "packages"}}
+- [{{ filepath.Base . }}]({{(ds "config").url}}/rpm/{{.}})
+{{- end -}}
+{{- end -}}
+{{- end -}}
+

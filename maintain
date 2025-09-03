@@ -125,7 +125,7 @@ function commit() {
 }
 
 function rebuild_md() {
-  echo "    TODO: rebuild md"
+  cat ../template/REPO_README.md.tmpl | gomplate -d config=../config.yaml > README.md
 }
 
 function rebuild_setup() {
@@ -135,6 +135,7 @@ function rebuild_setup() {
 
 function rebuild_readme() {
   cat template/README.md.tmpl | gomplate -d config=./config.yaml > README.md
+  git add README.md
 }
 
 function gitstat() {
@@ -202,6 +203,7 @@ function save() {
   fi
   add_repo_key
   rebuild_setup
+  rebuild_readme
   echo "Commiting..."
   commit $@
   echo "Pushing..."
@@ -255,6 +257,11 @@ function debug() {
       shift
       cd "$BASE_DIR"
       rebuild_readme
+      exit 0
+      ;;
+    "rebuild-md")
+      shift
+      rebuild_md
       exit 0
       ;;
   esac
