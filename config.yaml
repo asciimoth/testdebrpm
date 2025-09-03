@@ -4,5 +4,9 @@ url: "https://asciimoth.github.io/testdebrpm"
 deb:
   origin: "asciimoth"
   label: "asciimoth"
+  name: "asciimoth-test-deb-rpm"
   description: "My personal APT and RPM repo"
+
+rpm:
+  name: "asciimoth-test-deb-rpm"
 
