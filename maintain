@@ -225,6 +225,11 @@ function debug() {
       help $@
       exit 0
       ;;
+    "clean")
+      shift
+      clean
+      exit 0
+      ;;
     "gitstat")
       shift
       gitstat $@
@@ -288,11 +293,6 @@ case "$1" in
   "conf")
     shift
     conf $@
-    exit 0
-    ;;
-  "clean")
-    shift
-    clean
     exit 0
     ;;
   "save")
