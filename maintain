@@ -38,6 +38,7 @@ function help() {
   echo "Main commands:"
   echo " - help - show this message"
   echo " - add <package.deb|package.rpm> - add packages"
+  echo " - add <package> - remove all versions of packages"
   echo " - save - rebuild indexes, commit, push"
   echo ""
   echo "Debug:"
@@ -133,6 +134,31 @@ function add() {
         echo "Unknown pkg type: $filename" >&2
         ;;
     esac
+  done
+}
+
+function remove() {
+  cd "$BASE_DIR"
+  for pkg in "$@"; do
+    echo "Removing $pkg"
+    if [ -d "deb/pool" ]; then
+      for filename in deb/pool/*.deb; do
+          name="$(dpkg --info "$filename" | awk '/Package/ {printf "%s", $2}')"
+          if [ "$pkg" == "$name" ]; then
+            echo "  removing $filename"
+            rm -f "$filename"
+          fi
+      done
+    fi
+    if [ -d "rpm/packages" ]; then
+      for filename in rpm/packages/*.rpm; do
+          if [ "$pkg" == "$name" ]; then
+            name="$(rpm -qp --queryformat '%{NAME}\n' "$filename" 2>/dev/null)"
+            echo "  removing $filename"
+            rm -f "$filename"
+          fi
+      done
+    fi
   done
 }
 
@@ -316,6 +342,11 @@ case "$1" in
   "add")
     shift
     add $@
+    exit 0
+    ;;
+  "remove")
+    shift
+    remove $@
     exit 0
     ;;
   "save")
