@@ -1,4 +1,3 @@
-- [..]({{(ds "config").url}})
 {{- if (file.Exists "./Packages") }}
 - [Packages]({{(ds "config").url}}/deb/Packages) - packages index
 {{- end -}}
@@ -12,8 +11,8 @@
 {{- end -}}
 
 
-{{- if (file.Exists "./repomd.xml") }}
-- [Packages]({{(ds "config").url}}/rpm/repomd.xml) - packages index
+{{- if (file.Exists "./repodata/repomd.xml") }}
+- [repomd.xml]({{(ds "config").url}}/rpm/repodata/repomd.xml) - packages index
 {{- end -}}
 
 {{- if (file.Exists "./packages") -}}
