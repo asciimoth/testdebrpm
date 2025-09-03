@@ -33,7 +33,30 @@ DEB_LABEL="$(cat "$BASE_DIR/config.yaml" | yq  -r .deb.label)"
 DEB_DESCRIPTION="$(cat "$BASE_DIR/config.yaml" | yq -r .deb.description)"
 
 function help() {
-  echo "TODO: help"
+  echo "maintain [subcommand]"
+  echo ""
+  echo "Main commands:"
+  echo " - help - show this message"
+  echo " - add <package.deb|package.rpm> - add packages"
+  echo " - save - rebuild indexes, commit, push"
+  echo ""
+  echo "Debug:"
+  echo " - clean - remove all files managed by this script"
+  echo " - conf - show values readed from config"
+  echo " - gitstat - show git changes in specific subdir(s)"
+  echo " - commit - commit changes"
+  echo " - rebuild-deb - rebuild deb repo"
+  echo " - rebuild-rpm - rebuild rpm repo"
+  echo " - rebuild-setup - rebuild setup.sh script"
+  echo " - rebuild-readme - rebuild root README.md"
+  echo " - rebuild-md - rebuild README.md for current subdir (deb/rpm)"
+  echo ""
+  echo "Usage:"
+  echo " # Add packages"
+  echo " maintain add packagename.deb packagename.rpm"
+  echo " # Rebuild deb & rpm repos"
+  echo " # git commit -m \"feat: add packagename\""
+  echo " maintain save feat \"add packagename\""
 }
 
 function conf() {
@@ -230,6 +253,11 @@ function debug() {
       clean
       exit 0
       ;;
+    "conf")
+      shift
+      conf $@
+      exit 0
+      ;;
     "gitstat")
       shift
       gitstat $@
@@ -288,11 +316,6 @@ case "$1" in
   "add")
     shift
     add $@
-    exit 0
-    ;;
-  "conf")
-    shift
-    conf $@
     exit 0
     ;;
   "save")
