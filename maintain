@@ -192,8 +192,8 @@ function save() {
   add_repo_key
   echo "Commiting..."
   commit $@
-  # echo "  Pushing"
-  # git push
+  echo "Pushing..."
+  git push
 }
 
 function clean() {
