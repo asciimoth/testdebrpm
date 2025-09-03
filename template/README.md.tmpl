@@ -1,7 +1,10 @@
 # testdebrpm
 My test deb/rpm repo
 
-To add this repo to your deb/rpm system just run `curl {{(ds "config").url}}/setup.sh | bash`
+To add this repo to your deb/rpm system just run:
+```sh
+curl {{(ds "config").url}}/setup.sh | bash
+```
 
 ## Content
 - [KEY.gpg]({{(ds "config").url}}/KEY.gpg) - author's key
