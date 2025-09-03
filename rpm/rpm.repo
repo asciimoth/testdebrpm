@@ -1,0 +1,7 @@
+[asciimoth]
+name=asciimoth-test-deb-rpm
+baseurl=https://asciimoth.github.io/testdebrpm/rpm
+enabled=1
+gpgcheck=1
+gpgkey=https://asciimoth.github.io/testdebrpm/KEY.gpg
+

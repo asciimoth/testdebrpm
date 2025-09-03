@@ -1,0 +1,1 @@
+deb [signed-by=/etc/apt/trusted.gpg.d/asciimoth-test-deb-rpm.gpg] https://asciimoth.github.io/testdebrpm/deb ./
