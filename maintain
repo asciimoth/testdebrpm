@@ -14,7 +14,7 @@ function enter_env() {
 }
 
 function check_env() {
-  deps=("yq" "gzip" "rpm" "createrepo_c" "apt" "dpkg")
+  deps=("yq" "gzip" "rpm" "createrepo_c" "apt" "dpkg" "gomplate")
   for d in ${deps[@]}; do
     if ! command -v "$d" >/dev/null 2>&1
     then
@@ -50,10 +50,19 @@ function add_deb() {
   if [ "" == "$arch" ]; then
     arch="all"
   fi
-  filename="$name.deb"
-  echo "Adding deb $filename $arch"
-  mkdir -p "$BASE_DIR/deb/$arch/pool"
-  cp -f "$1" "$BASE_DIR/deb/$arch/pool/$filename"
+  filename="$name-$arch.deb"
+  pkg="$BASE_DIR/deb/pool/$filename"
+  echo "Adding deb $filename"
+  mkdir -p "$BASE_DIR/deb/pool"
+  # Skip if already added
+  if [ -f "$pkg" ]; then
+    version_a="$(dpkg --info "$1" | awk '/Version/ {printf "%s", $2}')"
+    version_b="$(dpkg --info "$1" | awk '/Version/ {printf "%s", $2}')"
+    if [ "$version_a" == "$version_b" ]; then
+      return
+    fi
+  fi
+  cp -u "$1" "$pkg"
 }
 
 function sign_rpm() {
@@ -66,10 +75,10 @@ function add_rpm() {
   if [ "" == "$arch" ]; then
     arch="noarch"
   fi
-  filename="$name.rpm"
-  echo "Adding rpm $filename $arch"
-  mkdir -p "$BASE_DIR/rpm/$arch/packages"
-  pkg="$BASE_DIR/rpm/$arch/packages/$filename"
+  filename="$name-$arch.rpm"
+  echo "Adding rpm $filename"
+  mkdir -p "$BASE_DIR/rpm/packages"
+  pkg="$BASE_DIR/rpm/packages/$filename"
   # Skip if already added
   if [ -f "$pkg" ]; then
     version_a="$(rpm -qp --queryformat '%{VERSION}\n' "$1" 2>/dev/null)"
@@ -104,8 +113,129 @@ function add() {
   done
 }
 
+# commit <commit msg>
+# commit <commit type: fix|chore|feat|etc> <commit msg>
+function commit() {
+  if [ ! "$#" -gt 1 ]; then
+    message="$1"
+  else
+    message="($1): $2"
+  fi
+  git commit -m "$message"
+}
+
+function rebuild_md() {
+  echo "    TODO: rebuild md"
+}
+
+function gitstat() {
+  git status --porcelain --untracked-files=all -- $@
+}
+
+function add_repo_key() {
+  # Skip if key is already added
+  if [ -f "KEY.gpg" ]; then
+    return
+  fi
+  gpg --export "$GPG_FPR" > KEY.gpg
+  git add KEY.gpg
+}
+
+function rebuild_deb() {
+  mkdir -p "deb/pool"
+  cat template/deb-archive.conf.tmpl | gomplate -d config=./config.yaml > deb/archive.conf
+  cd deb
+  # (Re)generate packages file
+  dpkg-scanpackages -m pool /dev/null > Packages
+  # (Re)generate release file
+  apt-ftparchive -c archive.conf release . > Release
+  # Sign release file
+  gpg --batch --yes --default-key "$GPG_FPR" --armor --detach-sign -o "Release.gpg" "Release"
+  rebuild_md
+  cd ..
+  git add deb
+}
+
+function rebuild_rpm() {
+  mkdir -p rpm/packages
+  cd rpm
+  createrepo_c .
+  gpg --batch --yes --default-key "$GPG_FPR" --armor --detach-sign -o "repodata/repomd.xml.asc" "repodata/repomd.xml"
+  rebuild_md
+  cd ..
+  git add rpm
+}
+
+# save <commit msg>
+# save <commit type: fix|chore|feat|etc> <commit msg>
+function save() {
+  cd "$BASE_DIR"
+  if [ "$(gitstat)" == "" ]; then
+    echo "There is no updates; Nothing to do"
+    return
+  fi
+  updates="false"
+  if [ "$(gitstat deb)" != "" ]; then
+    echo "Rebuilding deb..."
+    rebuild_deb
+    updates="true"
+  fi
+  if [ "$(gitstat rpm)" != "" ]; then
+    echo "Rebuilding rpm..."
+    rebuild_rpm
+    updates="true"
+  fi
+  if [ "$updates" == "false" ]; then
+    echo "There is no updates; Nothing to do"
+    return
+  fi
+  add_repo_key
+  echo "Commiting..."
+  commit $@
+  # echo "  Pushing"
+  # git push
+}
+
 function clean() {
   rm -rf "$BASE_DIR/deb" "$BASE_DIR/rpm"
+}
+
+function debug() {
+  if [ ! "$#" -gt 0 ]; then
+    help $@
+    exit 1
+  fi
+  case "$1" in
+    "help")
+      shift
+      help $@
+      exit 0
+      ;;
+    "gitstat")
+      shift
+      gitstat $@
+      exit 0
+      ;;
+    "commit")
+      shift
+      commit $@
+      exit 0
+      ;;
+    "rebuild-deb")
+      shift
+      cd "$BASE_DIR"
+      rebuild_deb
+      exit 0
+      ;;
+    "rebuild-rpm")
+      shift
+      cd "$BASE_DIR"
+      rebuild_rpm
+      exit 0
+      ;;
+  esac
+  help $@
+  exit 1
 }
 
 if [ ! "$#" -gt 0 ]; then
@@ -132,6 +262,16 @@ case "$1" in
   "clean")
     shift
     clean
+    exit 0
+    ;;
+  "save")
+    shift
+    save $@
+    exit 0
+    ;;
+  "debug")
+    shift
+    debug $@
     exit 0
     ;;
 esac
