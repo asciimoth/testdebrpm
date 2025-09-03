@@ -14,6 +14,9 @@
   }:
     flake-utils.lib.eachDefaultSystem (system: let
       pkgs = import nixpkgs {inherit system;};
+      maintain = pkgs.writeShellScriptBin "maintain" ''
+        ./maintain $@
+      '';
     in {
       devShell = pkgs.mkShell {
         buildInputs = [
@@ -24,6 +27,8 @@
           pkgs.gzip
           pkgs.yq # jq for yaml
           pkgs.gomplate # cli templating tool
+
+          maintain
         ];
       };
     });
