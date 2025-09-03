@@ -1,7 +1,10 @@
 # testdebrpm
 My test deb/rpm repo
 
-To add this repo to your deb/rpm system just run `curl https://asciimoth.github.io/testdebrpm/setup.sh | bash`
+To add this repo to your deb/rpm system just run:
+```sh
+curl https://asciimoth.github.io/testdebrpm/setup.sh | bash
+```
 
 ## Content
 - [KEY.gpg](https://asciimoth.github.io/testdebrpm/KEY.gpg) - author's key
