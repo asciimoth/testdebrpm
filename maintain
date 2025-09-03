@@ -133,6 +133,10 @@ function rebuild_setup() {
   chmod +x setup.sh
 }
 
+function rebuild_readme() {
+  cat template/README.md.tmpl | gomplate -d config=./config.yaml > README.md
+}
+
 function gitstat() {
   git status --porcelain --untracked-files=all -- $@
 }
@@ -245,6 +249,12 @@ function debug() {
       shift
       cd "$BASE_DIR"
       rebuild_setup
+      exit 0
+      ;;
+    "rebuild-readme")
+      shift
+      cd "$BASE_DIR"
+      rebuild_readme
       exit 0
       ;;
   esac
