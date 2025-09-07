@@ -1,33 +1,15 @@
 Package: gotestprjtmpl
-Version: 0.3.1
-Architecture: arm64
-Maintainer: John Doe <jdoe@example.com>
-Installed-Size: 1408
-Depends: bash
-Recommends: git
-Filename: pool/gotestprjtmpl-arm64.deb
-Size: 615706
-MD5sum: 8cd28382a464764ea48e3ee6e554266e
-SHA1: 2772ddbdd6f4adfde3322a45ae6fd330e33df090
-SHA256: 3c9b3a87631ee61b53e927f4a3baf64eb229b25321959172576f52c4f8c0e4b7
-Section: default
-Priority: optional
-Homepage: https://example.com/
-Description: Usefull tool
-License: Apache OR MIT
-
-Package: gotestprjtmpl
-Version: 0.8.0
+Version: 0.9.5
 Architecture: amd64
 Maintainer: John Doe <jdoe@example.com>
 Installed-Size: 1404
 Depends: bash
 Recommends: git
 Filename: pool/gotestprjtmpl-amd64.deb
-Size: 652728
-MD5sum: e4c09ce46962ecd0e0f2a1cc9ac7578b
-SHA1: 48072392a6b0c41d39318e68c87ceabb294c052b
-SHA256: 791cdf3855989854bf2cf640b6cffa8fe99bbb99c1fe9c10eff9f2a250889eed
+Size: 652732
+MD5sum: 91be35dd2061cf0fb88da3f7862bab6d
+SHA1: a63b98ecbe976debb88398bede1b93a021470831
+SHA256: f5f5c9b1a56d07b785a55cba4e0ff8f6784885c65c674a10ada61696e4806dbc
 Section: default
 Priority: optional
 Homepage: https://example.com/
@@ -35,35 +17,53 @@ Description: Usefull tool
 License: Apache OR MIT
 
 Package: gotestprjtmpl
-Version: 0.8.0
+Version: 0.9.5
+Architecture: i386
+Maintainer: John Doe <jdoe@example.com>
+Installed-Size: 1332
+Depends: bash
+Recommends: git
+Filename: pool/gotestprjtmpl-i386.deb
+Size: 628160
+MD5sum: 4e37eddecbf8eb6b49c77dcd1eba1951
+SHA1: 19b14f86f0deb342b22e5a6d82d34fd5d9342b99
+SHA256: 5b42e5c634fc2a98af25db98503e27f7db9b64459f707bfe7bd75489fca6d177
+Section: default
+Priority: optional
+Homepage: https://example.com/
+Description: Usefull tool
+License: Apache OR MIT
+
+Package: gotestprjtmpl
+Version: 0.9.5
+Architecture: arm64
+Maintainer: John Doe <jdoe@example.com>
+Installed-Size: 1408
+Depends: bash
+Recommends: git
+Filename: pool/gotestprjtmpl-arm64.deb
+Size: 615712
+MD5sum: 186396dedcd28da299fd801c1a2a0233
+SHA1: f54a4dac6964194bfa621f06c205d31f20c88da9
+SHA256: 6fce7fff40d49f910771c93a19dbe6721cd175e1410d69fb26ce4818f82987b8
+Section: default
+Priority: optional
+Homepage: https://example.com/
+Description: Usefull tool
+License: Apache OR MIT
+
+Package: gotestprjtmpl
+Version: 0.9.5
 Architecture: armhf
 Maintainer: John Doe <jdoe@example.com>
 Installed-Size: 1472
 Depends: bash
 Recommends: git
 Filename: pool/gotestprjtmpl-armhf.deb
-Size: 621898
-MD5sum: f8f12da426ee61744f9a981f0943d8c4
-SHA1: 92150116500f1d4606ff3738a7df2ecbd42294bc
-SHA256: d0ffeb4057e2c6cfc2c6fe3ab8c73284989e4266ce85132f0a4f79cc6cfd44c3
-Section: default
-Priority: optional
-Homepage: https://example.com/
-Description: Usefull tool
-License: Apache OR MIT
-
-Package: gotestprjtmpl
-Version: 0.9.2
-Architecture: i386
-Maintainer: John Doe <jdoe@example.com>
-Installed-Size: 1340
-Depends: bash
-Recommends: git
-Filename: pool/gotestprjtmpl-i386.deb
-Size: 628402
-MD5sum: 19afe7d43c8a2ebcd0a92a67314ca425
-SHA1: 4241a220b4eea44914779dee72e3d1e8cd1c4e15
-SHA256: 225d8994da8085770d7a9b75c778363f2c6892d464dd8eef3ade8db6eca34da3
+Size: 621910
+MD5sum: 04766830c8e524d10364754a3d4cbe68
+SHA1: dfe7c0018021c7129df3f8f39c7ae5cfc00ed178
+SHA256: 4cd8c1e3d5a12da9bc3d1bce9ebd718b10219e727cabbd5a7a86c3c8cdc3f8ed
 Section: default
 Priority: optional
 Homepage: https://example.com/
